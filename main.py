@@ -3,7 +3,32 @@ def main():
     file = get_book_text(book_path)
     words = count_words(file)
     characters = count_characters(file)
-    print(characters)
+    cleanup = cleanup_characters(characters)
+    print_report(book_path, words, cleanup)
+
+def print_report(book_path, words, characters):
+    characters.sort(reverse=True, key=sort_on)
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{words} words found in the document")
+    for i in characters:
+        name = i["name"]
+        num = i["num"]
+        print(f"The '{name}' character was found {num} times")
+    print("--- End report ---")
+
+def sort_on(dict):
+    return dict["num"]
+
+def cleanup_characters(chars):
+    new_list = []
+    new_dic = {}
+    for i in chars:
+        if i.isalpha():
+            new_dic["name"] = i
+            new_dic["num"] = chars[i]
+            new_list.append(new_dic)
+            new_dic = {}
+    return new_list
 
 def count_characters(text):
     mydic = {}
